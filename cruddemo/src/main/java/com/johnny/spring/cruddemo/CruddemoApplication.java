@@ -7,6 +7,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.List;
+
 @SpringBootApplication
 public class CruddemoApplication {
 
@@ -18,9 +20,62 @@ public class CruddemoApplication {
 	public CommandLineRunner commandLineRunner(StudentDAO studentDAO){
 		return runner -> {
 //			createStudent(studentDAO);
-//			createMultipleStudents(studentDAO);
-			readStudent(studentDAO);
+			createMultipleStudents(studentDAO);
+//			readStudent(studentDAO);
+//			queryForStudents(studentDAO);
+//			queryForStudentsByLastName(studentDAO);
+//			updateStudent(studentDAO);
+//			deleteStudent(studentDAO);
+//			deleteAll(studentDAO);
 		};
+	}
+
+	private void deleteAll(StudentDAO studentDAO) {
+		System.out.println("Deleting all students");
+		int numRowsDeleted = studentDAO.deleteAll();
+		System.out.println("Delete row count: " + numRowsDeleted);
+	}
+
+	private void deleteStudent(StudentDAO studentDAO) {
+		int studentId = 3;
+
+		// Delete the student
+		System.out.println("Deleting student id: " + studentId);
+		studentDAO.delete(studentId);
+	}
+
+	private void updateStudent(StudentDAO studentDAO) {
+		// Retrieve student based on the id: primary key
+		int studentId = 1;
+		System.out.println("Getting student with id; " + studentId);
+		Student myStudent = studentDAO.findById(studentId);
+
+		// Change first name to "Scooby"
+		System.out.println("Updating student");
+		myStudent.setFirstName("Paul");
+
+		// Update the student
+		studentDAO.update(myStudent);
+
+		// Display updated student
+		System.out.println("Updated student: " + myStudent);
+	}
+
+	private void queryForStudentsByLastName(StudentDAO studentDAO) {
+		 // Get a List of students
+		List<Student> theStudents = studentDAO.findByLastName("doe");
+
+		// Display list of students
+		theStudents.forEach(System.out::println);
+	}
+
+	private void queryForStudents(StudentDAO studentDAO) {
+
+		// Get a list of students
+		List<Student> theStudents = studentDAO.findAll();
+
+		// Display list of students
+		theStudents.forEach(System.out::println);
 	}
 
 	private void readStudent(StudentDAO studentDAO) {
